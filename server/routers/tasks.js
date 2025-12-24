@@ -90,6 +90,92 @@ router.get("/", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/tasks:
+ *   post:
+ *     summary: Створити нове завдання
+ *     tags:
+ *       - Tasks
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Купити продукти
+ *               description:
+ *                 type: string
+ *                 example: Молоко, хліб, яйця
+ *               priority:
+ *                 type: string
+ *                 enum: [low, medium, high]
+ *                 example: low
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 example: 2025-12-24
+ *     responses:
+ *       200:
+ *         description: Завдання успішно створено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Завдання успішно створено
+ *                 task:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     title:
+ *                       type: string
+ *                       example: Купити продукти
+ *                     description:
+ *                       type: string
+ *                       example: Молоко, хліб, яйця
+ *                     priority:
+ *                       type: string
+ *                       example: low
+ *                     date:
+ *                       type: string
+ *                       format: date
+ *                       example: 2025-12-24
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *       400:
+ *         description: Помилка створення завдання
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Помилка створення завдання
+ *                 error:
+ *                   type: string
+ */
+
 router.post("/", validateTask, async (req, res) => {
     try {
         const { title, description, priority, date } = req.body;
@@ -114,6 +200,113 @@ router.post("/", validateTask, async (req, res) => {
         });
     }
 });
+
+/**
+ * @swagger
+ * /api/tasks/{id}:
+ *   put:
+ *     summary: Оновити існуюче завдання
+ *     tags:
+ *       - Tasks
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID завдання
+ *         schema:
+ *           type: string
+ *           example: 64b7f3e2a1c9a3f1d1234567
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Оновлена назва
+ *               description:
+ *                 type: string
+ *                 example: Оновлений опис
+ *               priority:
+ *                 type: string
+ *                 enum: [low, medium, high]
+ *                 example: medium
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 example: 2025-12-30
+ *     responses:
+ *       200:
+ *         description: Завдання успішно оновлено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Завдання успішно оновлено
+ *                 task:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: 64b7f3e2a1c9a3f1d1234567
+ *                     title:
+ *                       type: string
+ *                       example: Оновлена назва
+ *                     description:
+ *                       type: string
+ *                       example: Оновлений опис
+ *                     priority:
+ *                       type: string
+ *                       example: medium
+ *                     date:
+ *                       type: string
+ *                       format: date
+ *                       example: 2025-12-30
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *       404:
+ *         description: Завдання не знайдено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Завдання не знайдено
+ *       400:
+ *         description: Помилка редагування
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Помилка редагування
+ *                 error:
+ *                   type: string
+ */
 
 router.put("/:id", validateObjectId, validateTask, async (req, res) => {
     try {
@@ -145,6 +338,65 @@ router.put("/:id", validateObjectId, validateTask, async (req, res) => {
         });
     }
 });
+
+/**
+ * @swagger
+ * /api/tasks/{id}:
+ *   delete:
+ *     summary: Видалити завдання
+ *     tags:
+ *       - Tasks
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID завдання
+ *         schema:
+ *           type: string
+ *           example: 64b7f3e2a1c9a3f1d1234567
+ *     responses:
+ *       200:
+ *         description: Завдання успішно видалено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Завдання видалено
+ *       404:
+ *         description: Завдання не знайдено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Не знайдено
+ *       500:
+ *         description: Сталась помилка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Сталась помилка
+ *                 error:
+ *                   type: string
+ */
 
 router.delete("/:id", validateObjectId, async (req, res) => {
     try {
